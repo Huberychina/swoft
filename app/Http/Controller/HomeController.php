@@ -10,6 +10,7 @@
 
 namespace App\Http\Controller;
 
+use App\Common\RpcProvider;
 use Swoft;
 use Swoft\Http\Message\ContentType;
 use Swoft\Http\Message\Response;
@@ -41,11 +42,25 @@ class HomeController
     /**
      * @RequestMapping("/hi")
      *
+     *
      * @return Response
      */
     public function hi(): Response
     {
         return context()->getResponse()->withContent('hi');
+
+    }
+
+    /**
+     * @RequestMapping("/getServices")
+     *
+     *
+     * @return Response
+     */
+    public function getServices(): Response
+    {
+        return context()->getResponse()->withContent((new RpcProvider())->getList());
+
     }
 
     /**
@@ -68,5 +83,16 @@ class HomeController
     public function wsTest(): Response
     {
         return view('home/ws-test');
+    }
+
+    /**
+     * @RequestMapping("/testapsect")
+     * @param string $name
+     * @return Response
+     */
+    public function testapsect(string $name): Response
+    {
+        sleep(3);
+        return context()->getResponse()->withData(['ok']);
     }
 }

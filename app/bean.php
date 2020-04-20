@@ -8,6 +8,7 @@
  * @license  https://github.com/swoft-cloud/swoft/blob/master/LICENSE
  */
 use App\Common\DbSelector;
+use App\Common\RpcProvider;
 use App\Process\MonitorProcess;
 use Swoft\Crontab\Process\CrontabProcess;
 use Swoft\Db\Pool;
@@ -75,9 +76,9 @@ return [
     ],
     'db'                => [
         'class'    => Database::class,
-        'dsn'      => 'mysql:dbname=test;host=127.0.0.1',
+        'dsn'      => 'mysql:dbname=test;host=192.168.2.248:13306',
         'username' => 'root',
-        'password' => 'swoft123456',
+        'password' => '123456',
         'charset' => 'utf8mb4',
     ],
     'db2'               => [
@@ -106,8 +107,8 @@ return [
     ],
     'redis'             => [
         'class'    => RedisDb::class,
-        'host'     => '127.0.0.1',
-        'port'     => 6379,
+        'host'     => '192.168.2.248',
+        'port'     => 16379,
         'database' => 0,
         'option'   => [
             'prefix' => 'swoft:'
@@ -115,8 +116,25 @@ return [
     ],
     'user'              => [
         'class'   => ServiceClient::class,
-        'host'    => '127.0.0.1',
-        'port'    => 18307,
+        'host'    => '192.168.2.248',
+        'port'    => 18501,
+        'setting' => [
+            'timeout'         => 0.5,
+            'connect_timeout' => 1.0,
+            'write_timeout'   => 10.0,
+            'read_timeout'    => 0.5,
+        ],
+        'packet'  => bean('rpcClientPacket'),
+//        'provider' => bean(RpcProvider::class)
+    ],
+    'user.pool'         => [
+        'class'  => ServicePool::class,
+        'client' => bean('user'),
+    ],
+    'trade'              => [
+        'class'   => ServiceClient::class,
+        'host'    => '192.168.2.248',
+        'port'    => 18401,
         'setting' => [
             'timeout'         => 0.5,
             'connect_timeout' => 1.0,
@@ -125,9 +143,9 @@ return [
         ],
         'packet'  => bean('rpcClientPacket')
     ],
-    'user.pool'         => [
+    'trade.pool'         => [
         'class'  => ServicePool::class,
-        'client' => bean('user'),
+        'client' => bean('trade'),
     ],
     'rpcServer'         => [
         'class' => ServiceServer::class,

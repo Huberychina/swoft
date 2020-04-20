@@ -24,7 +24,7 @@ use Swoft\Breaker\Annotation\Mapping\Breaker;
 class BreakerLogic
 {
     /**
-     * @Breaker(fallback="funcFallback")
+     * @Breaker(fallback="funcFallback",failThreshold=1)
      *
      * @return string
      * @throws Exception

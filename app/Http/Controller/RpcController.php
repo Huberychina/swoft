@@ -10,11 +10,13 @@
 
 namespace App\Http\Controller;
 
+use App\Rpc\Lib\TradeInterface;
 use App\Rpc\Lib\UserInterface;
 use Exception;
 use Swoft\Co;
 use Swoft\Http\Server\Annotation\Mapping\Controller;
 use Swoft\Http\Server\Annotation\Mapping\RequestMapping;
+use Swoft\Limiter\Annotation\Mapping\RateLimiter;
 use Swoft\Rpc\Client\Annotation\Mapping\Reference;
 
 /**
@@ -41,6 +43,13 @@ class RpcController
     private $userService2;
 
     /**
+     * @Reference(pool="trade.pool")
+     *
+     * @var TradeInterface
+     */
+    private $tradeService;
+
+    /**
      * @RequestMapping("getList")
      *
      * @return array
@@ -49,8 +58,28 @@ class RpcController
     {
         $result  = $this->userService->getList(12, 'type');
         $result2 = $this->userService2->getList(12, 'type');
+        $result3 = $this->tradeService->getList(13, 'type');
 
-        return [$result, $result2];
+        return [$result, $result2,$result3];
+    }
+
+    /**
+     * @RequestMapping("getListWithLimiter")
+     * @RateLimiter(rate=1,max=2,fallback="fallback")
+     *
+     * @return array
+     */
+    public function getListWithLimiter(): array
+    {
+        $result  = $this->userService->getList(12, 'type');
+        $result2 = $this->userService2->getList(12, 'type');
+        $result3 = $this->tradeService->getList(13, 'type');
+
+        return [$result, $result2,$result3];
+    }
+
+    public function fallback(){
+        return ['服务器走丢了'];
     }
 
     /**

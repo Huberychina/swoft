@@ -17,21 +17,24 @@ services:
       - "18307:18307"
       - "18308:18308"
     volumes:
-       - ./:/var/www/swoft
+       - ../:/var/www/
 #       - ./:/var/www/swoft:delegated
 #      - ./:/var/www/swoft:cached
       # - ./runtime/ng-conf:/etc/nginx
       # - ./runtime/logs:/var/log
+    stdin_open: true
+    tty: true
+    command: /bin/bash
 
   mysql:
-    image: mysql
+    image: mysql:5.7
     container_name: mysql-srv
     environment:
       - MYSQL_ROOT_PASSWORD=123456
     ports:
       - "13306:3306"
     volumes:
-      - ./runtime/data/mysql:/var/lib/mysql
+      - ./runtime/data/mysql:/var/lib/data/mysql
     restart: always
 
   redis:

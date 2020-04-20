@@ -21,7 +21,7 @@ use Swoft\Db\Eloquent\Model;
  *
  * @since 2.0
  *
- * @Entity(table="user")
+ * @Entity(table="user_new")
  */
 class User extends Model
 {
